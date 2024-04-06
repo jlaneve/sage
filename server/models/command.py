@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict
+from typing import Dict, List
 
 
 class RecordedCommand(BaseModel):
@@ -35,6 +35,10 @@ class RankedCommandOutput(BaseModel):
     command_summary: str
     score: float
 
+class RetrievalAndOutput(BaseModel):
+    retrieved_docs: List[RankedCommandOutput]
+    llm_generated_code: str
+    
 def command_output(input: Dict[str, str]) -> CommandOutput:
     return CommandOutput(
         _id=str(input["_id"]),

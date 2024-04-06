@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import APIRouter
 
-from models.command import RecordedCommand, CommandOutput, command_output, RankedCommandOutput, ranked_command_output
+from models.command import RecordedCommand, CommandOutput, RetrievalAndOutput, command_output, RankedCommandOutput, ranked_command_output
 from services.gen_embeddings import generate_embeddings
 from services.llm_services import complete_command_code_with_rag, generate_command_summary
 from services.pii_redaction import redact_command
@@ -42,7 +42,7 @@ async def insert_command(req: RecordedCommand) -> CommandOutput:
     return command_output(doc)
 
 @cmd_router.post("/complete_command")
-async def complete_command(prompt: str) -> List[RankedCommandOutput]:
+async def complete_command(prompt: str) -> RetrievalAndOutput:
     """
     Based on prompt. Returns the top relevant commands or suggest one if none found
     """
@@ -54,4 +54,4 @@ async def complete_command(prompt: str) -> List[RankedCommandOutput]:
     retrieved_docs = sorted(retrieved_docs, key=lambda x: x["score"], reverse=True)
 
     llm_generated_code = complete_command_code_with_rag(prompt, retrieved_docs)
-    return {"retrieved_docs": list([ranked_command_output(doc) for doc in retrieved_docs]), "llm_generated_code": llm_generated_code}
+    return RetrievalAndOutput(retrieved_docs=list([ranked_command_output(doc) for doc in retrieved_docs]), llm_generated_code=llm_generated_code)

@@ -119,8 +119,10 @@ def complete_command_code_with_rag(prompt: str, retrieved_docs: List[Dict[str, s
     
     llm_response = response.choices[0].message.content
     code_blocks_in_response = extract_content(llm_response)
+    
 
     if len(code_blocks_in_response) > 0:
-        return code_blocks_in_response[0]
+        parsed_output = code_blocks_in_response[0].strip()
+        return parsed_output
     else:
         return ""
