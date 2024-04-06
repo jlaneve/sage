@@ -46,6 +46,7 @@ def redact_command(cmd: str) -> str:
     response = requests.post(HF_INFERENCE_URL, headers=HF_HEADERS, json=payload)
     ner_result = response.json()
 
+    parsed_command = cmd
     # based on response, redact
     for entity in ner_result:
         if entity["score"] < 0.9:

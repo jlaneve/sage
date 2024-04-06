@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from services.pii import redact_command
+from server.services.pii_redaction import redact_command
 
 cmd_router = APIRouter()
 
