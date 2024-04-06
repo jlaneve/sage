@@ -1,8 +1,9 @@
 from logging import getLogger
+from typing import List
 
 from fastapi import APIRouter
 
-from models.command import CommandPrompt, RecordedCommand
+from models.command import RecordedCommand, CommandOutput, command_output, RankedCommandOutput, ranked_command_output
 from services.gen_embeddings import generate_embeddings
 from services.gen_cmd_summary import generate_command_summary
 from services.pii_redaction import redact_command
@@ -14,7 +15,7 @@ cmd_router = APIRouter()
 
 
 @cmd_router.post("/insert_command")
-async def insert_command(req: RecordedCommand):
+async def insert_command(req: RecordedCommand) -> CommandOutput:
     """
     Processes a command. Redacts PII and returns the redacted command
     """
@@ -38,31 +39,18 @@ async def insert_command(req: RecordedCommand):
     
     insert_doc(doc)
 
-    # turn object id to a str
-    doc["_id"] = str(doc["_id"])
-
-    return doc
+    return command_output(doc)
 
 @cmd_router.post("/complete_command")
-async def complete_command(req: CommandPrompt):
+async def complete_command(prompt: str) -> List[RankedCommandOutput]:
     """
     Based on prompt. Returns the top relevant commands or suggest one if none found
     """
+    logger.info(f"Retrieving commands for: {prompt}")
 
-    doc = {
-        "prompt": req.prompt,
-        "cwd": req.cwd,
-        "base_dir": req.base_dir,
-        "user": req.user,
-        "timestamp": req.timestamp,
-    }
+    retrieved_docs = retrieve_doc(prompt)
 
-    logger.info(f"Retrieving command: {doc}")
+    # sort by score
+    retrieved_docs = sorted(retrieved_docs, key=lambda x: x["score"], reverse=True)
 
-    retrieved_docs = retrieve_doc(req)
-
-    # # turn object id to a str
-    for doc in retrieved_docs:
-        doc["_id"] = str(doc["_id"])
-        
-    return {"retrieved_docs": list(retrieved_docs)}
+    return list([ranked_command_output(doc) for doc in retrieved_docs])

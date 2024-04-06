@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "sage"
+version = "0.1.0"
+description = ""
+authors = ["Julian LaNeve <lanevejulian@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+typer = { extras = ["all"], version = "^0.12.1" }
+questionary = "^2.0.1"
+pyperclip = "^1.8.2"
+
+[tool.poetry.scripts]
+sage = "sage.main:sage"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

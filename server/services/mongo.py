@@ -5,7 +5,6 @@ from typing import Dict, List
 
 from pymongo import MongoClient
 
-from routes.command import CommandPrompt
 from services.gen_embeddings import generate_embeddings
 
 logger = getLogger(__name__)
@@ -29,12 +28,12 @@ def insert_doc(doc: Dict[str, str]) -> bool:
     
     return True
 
-def retrieve_doc(command_prompt: CommandPrompt) -> List[Dict[str, str]]:
+def retrieve_doc(prompt: str) -> List[Dict[str, str]]:
     """
     Retrieve a command from the database
     """
 
-    vectors = generate_embeddings(command_prompt.prompt)
+    vectors = generate_embeddings(prompt)
 
     result = client['commands']['recorded_commands'].aggregate([
         {

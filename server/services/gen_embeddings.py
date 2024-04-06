@@ -1,6 +1,6 @@
 from nomic import embed
 
-def generate_embeddings(text: str):    
+def generate_embeddings(text: str):
     embeddings_responses = embed.text(
         texts=[text],
         model='nomic-embed-text-v1.5',

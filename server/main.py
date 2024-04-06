@@ -14,7 +14,10 @@ from fastapi import FastAPI
 
 from routes import routers
 
-app = FastAPI()
+app = FastAPI(
+    title="sage",
+    description="Sage API",
+)
 
 for router in routers:
     app.include_router(router)

@@ -10,6 +10,9 @@ function command_capture_preexec() {
     local time=$(date)
     local cwd=$(pwd)
 
+    # escape the command
+    command=$(echo $command | sed 's/"/\\"/g')
+
     # make a request to $api_url/insert_command with the command, user, time, pwd, root_dir
     # as a subshell to avoid blocking the shell
     (
