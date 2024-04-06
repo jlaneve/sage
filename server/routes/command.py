@@ -36,4 +36,7 @@ async def insert_command(req: RecordedCommand):
     logger.info(f"Inserting command: {doc}")
     insert_doc(doc)
 
+    # turn object id to a str
+    doc["_id"] = str(doc["_id"])
+
     return doc

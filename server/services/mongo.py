@@ -13,12 +13,14 @@ logger.info("Establishing connection to MongoDB...")
 client = MongoClient(mongo_url)
 logger.info("Connected.")
 
-def insert_doc(command: Dict[str, str]):
+def insert_doc(doc: Dict[str, str]) -> bool:
     """
     Insert a command into the database
     """
     db = client["commands"]
     collection = db["recorded_commands"]
-    collection.insert_one(command)
+    result = collection.insert_one(doc)
+
+    logger.info(f"Inserted document with ID: {result.inserted_id}")
     
     return True
