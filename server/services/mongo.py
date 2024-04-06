@@ -1,12 +1,12 @@
 "Service to interact with MongoDB"
 import os
 from logging import getLogger
-from typing import Dict
+from typing import Dict, List
 
 from pymongo import MongoClient
-from nomic import embed
 
 from routes.command import CommandPrompt
+from services.gen_embeddings import generate_embeddings
 
 logger = getLogger(__name__)
 
@@ -29,22 +29,12 @@ def insert_doc(doc: Dict[str, str]) -> bool:
     
     return True
 
-def retrieve_doc(command_prompt: CommandPrompt) -> Dict[str, str]:
+def retrieve_doc(command_prompt: CommandPrompt) -> List[Dict[str, str]]:
     """
     Retrieve a command from the database
     """
-    # # doc = collection.find_one({"_id": doc_id})
 
-    embeddings_responses = embed.text(
-        texts=[command_prompt.prompt],
-        model='nomic-embed-text-v1.5',
-        task_type='search_document',
-        dimensionality=512,
-    )
-
-    # print(embeddings_responses)
-    
-    vectors = embeddings_responses['embeddings'][0]
+    vectors = generate_embeddings(command_prompt.prompt)
 
     result = client['commands']['recorded_commands'].aggregate([
         {
@@ -52,17 +42,22 @@ def retrieve_doc(command_prompt: CommandPrompt) -> Dict[str, str]:
             "index": "default",
             "path": "summary_embeddings",
             "queryVector": vectors,
-            "numCandidates": 3,
+            "numCandidates": 30,
             "limit": 3,
+            }
+        },
+        {
+            "$project": {
+                "summary_embeddings": False,
+                "score": { "$meta": "vectorSearchScore" }
             }
         }
     ])
 
+    logger.info(f"Retrieved documents: ")
+    # filter if score is less than 0.8
+    result = [i for i in result if i['score'] > 0.6]
     for i in result:
-        print(i)
-
-    # logger.info(f"Retrieved document: {doc}")
-
-    # return doc
-
-# write  afooor
+        logger.info(i)
+        
+    return result

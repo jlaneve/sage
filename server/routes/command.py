@@ -1,9 +1,9 @@
 from logging import getLogger
 
 from fastapi import APIRouter
-from pydantic import BaseModel
 
 from models.command import CommandPrompt, RecordedCommand
+from services.gen_embeddings import generate_embeddings
 from services.gen_cmd_summary import generate_command_summary
 from services.pii_redaction import redact_command
 from services.mongo import insert_doc, retrieve_doc
@@ -27,10 +27,15 @@ async def insert_command(req: RecordedCommand):
         "base_dir": req.base_dir,
         "user": req.user,
         "timestamp": req.timestamp,
-        "command_summary":cmd_summary
+        "command_summary":cmd_summary,
     }
 
     logger.info(f"Inserting command: {doc}")
+    
+    vectors = generate_embeddings(req.command)
+    
+    doc["summary_embeddings"] = vectors
+    
     insert_doc(doc)
 
     # turn object id to a str
@@ -54,9 +59,10 @@ async def complete_command(req: CommandPrompt):
 
     logger.info(f"Retrieving command: {doc}")
 
-    retrieve_doc(req)
+    retrieved_docs = retrieve_doc(req)
 
     # # turn object id to a str
-    # doc["_id"] = str(doc["_id"])
-
-    return doc
+    for doc in retrieved_docs:
+        doc["_id"] = str(doc["_id"])
+        
+    return {"retrieved_docs": list(retrieved_docs)}
