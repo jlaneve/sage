@@ -20,7 +20,7 @@ def gen_replacement_word(entity: Dict[str, str]) -> str:
     """
     replacement_word = "<REPLACE_WITH_YOUR_OWN_VALUE>"
     if entity["entity_group"] == "EMAIL":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_EMAIL>"
+        replacement_word = "<REPLACE_WITH_YOUR_OWN_EMAIL_OR_USERNAME@HOST>"
     elif entity["entity_group"] == "IP_ADDRESS":
         replacement_word = "<REPLACE_WITH_YOUR_OWN_IP>"
     elif entity["entity_group"] == "DOMAIN_NAME":

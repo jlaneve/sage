@@ -3,3 +3,4 @@ requests==2.31.0
 uvicorn
 pymongo[srv]
 python-dotenv
+openai==1.16.2
