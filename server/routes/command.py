@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 from models.command import RecordedCommand, CommandOutput, command_output, RankedCommandOutput, ranked_command_output
 from services.gen_embeddings import generate_embeddings
-from services.gen_cmd_summary import generate_command_summary
+from services.llm_services import complete_command_code_with_rag, generate_command_summary
 from services.pii_redaction import redact_command
 from services.mongo import insert_doc, retrieve_doc
 
@@ -53,4 +53,5 @@ async def complete_command(prompt: str) -> List[RankedCommandOutput]:
     # sort by score
     retrieved_docs = sorted(retrieved_docs, key=lambda x: x["score"], reverse=True)
 
-    return list([ranked_command_output(doc) for doc in retrieved_docs])
+    llm_generated_code = complete_command_code_with_rag(prompt, retrieved_docs)
+    return {"retrieved_docs": list([ranked_command_output(doc) for doc in retrieved_docs]), "llm_generated_code": llm_generated_code}
