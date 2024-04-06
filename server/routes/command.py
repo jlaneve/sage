@@ -3,27 +3,14 @@ from logging import getLogger
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from models.command import CommandPrompt, RecordedCommand
 from services.gen_cmd_summary import generate_command_summary
 from services.pii_redaction import redact_command
-from services.mongo import insert_doc
+from services.mongo import insert_doc, retrieve_doc
 
 logger = getLogger(__name__)
 
 cmd_router = APIRouter()
-
-class RecordedCommand(BaseModel):
-    command: str
-    cwd: str
-    base_dir: str
-    user: str
-    timestamp: str
-
-class CommandPrompt(BaseModel):
-    prompt: str
-    cwd: str
-    base_dir: str
-    user: str
-    timestamp: str
 
 
 @cmd_router.post("/insert_command")
@@ -67,8 +54,9 @@ async def complete_command(req: CommandPrompt):
 
     logger.info(f"Retrieving command: {doc}")
 
+    retrieve_doc(req)
 
-    # turn object id to a str
-    doc["_id"] = str(doc["_id"])
+    # # turn object id to a str
+    # doc["_id"] = str(doc["_id"])
 
     return doc
