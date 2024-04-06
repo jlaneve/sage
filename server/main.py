@@ -7,8 +7,8 @@ import uvicorn
 
 app = FastAPI()
 
-HF_TOKEN = os.environ.get("HF_TOKEN")
-HF_INFERENCE_URL = os.environ.get("HF_INFERENCE_URL")
+HF_TOKEN = os.environ["HF_TOKEN"]
+HF_INFERENCE_URL = os.environ.get["HF_INFERENCE_URL"]
 HF_HEADERS = {
 	"Accept" : "application/json",
 	"Authorization": f"Bearer {HF_TOKEN}",
