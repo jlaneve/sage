@@ -1,5 +1,6 @@
 "PII redaction service"
 import os
+from typing import Dict
 import requests
 
 HF_TOKEN = os.environ.get("HF_TOKEN")
@@ -12,7 +13,7 @@ HF_HEADERS = {
 HF_TOKEN_CLASSIFICATION_PARAMS = {"aggregation_strategy": "simple"}
 
 
-def gen_replacement_word(entity: dict[str, str]) -> str:
+def gen_replacement_word(entity: Dict[str, str]) -> str:
     """
     Generate a replacement word for a given entity
     """
@@ -47,9 +48,8 @@ def redact_command(cmd: str) -> str:
 
     # based on response, redact
     for entity in ner_result:
-        if entity["score"] < 0.5:
+        if entity["score"] < 0.9:
             continue
-
-    parsed_command = cmd.replace(entity["word"].strip(), gen_replacement_word(entity))
+        parsed_command = cmd.replace(entity["word"].strip(), gen_replacement_word(entity))
     
     return parsed_command
