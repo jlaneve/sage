@@ -13,6 +13,7 @@ logger.info("Establishing connection to MongoDB...")
 client = MongoClient(mongo_url)
 logger.info("Connected.")
 
+
 def insert_doc(doc: Dict[str, str]) -> bool:
     """
     Insert a command into the database
