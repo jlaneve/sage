@@ -58,7 +58,7 @@ You will be given a prompt starting with "Prompt:" with the prompt string surrou
 You will also be given a list of retrieved most relevant commands to the prompt that have been previously used by the user's coworkers. \
 Your task is to use the prompt and the retrieved relevant previous commands to generate a new command line bash code. \
 The new command line bash code should be a valid bash command that is relevant to the prompt. \
-If the relevant previous commands are not useful, you can ignore them. \
+If the relevant previous commands are not useful, you can ignore them and instead generate the best bash command based on your own knowledge. \
 Surround the output command with ``` blocks. \
 
 For example, here is an example input below:
