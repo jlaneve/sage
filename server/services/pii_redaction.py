@@ -2,6 +2,7 @@
 import os
 from typing import Dict
 import requests
+from typing import Dict
 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 HF_INFERENCE_URL = os.environ.get("HF_INFERENCE_URL")

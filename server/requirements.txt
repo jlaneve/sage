@@ -1,3 +1,5 @@
 fastapi==0.110.1
 requests==2.31.0
 uvicorn
+pymongo[srv]
+python-dotenv

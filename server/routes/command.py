@@ -1,7 +1,12 @@
+from logging import getLogger
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
 from services.pii_redaction import redact_command
+from services.mongo import insert_doc
+
+logger = getLogger(__name__)
 
 cmd_router = APIRouter()
 
@@ -20,4 +25,15 @@ async def insert_command(req: RecordedCommand):
     """
     redacted_cmd = redact_command(req.command)
 
-    return redacted_cmd
+    doc = {
+        "command": redacted_cmd,
+        "cwd": req.cwd,
+        "base_dir": req.base_dir,
+        "user": req.user,
+        "timestamp": req.timestamp
+    }
+
+    logger.info(f"Inserting command: {doc}")
+    insert_doc(doc)
+
+    return doc
