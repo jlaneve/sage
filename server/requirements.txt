@@ -6,3 +6,4 @@ python-dotenv
 openai==1.16.2
 langchain==0.1.14
 langchain_nomic==0.0.2
+cohere
