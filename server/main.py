@@ -63,7 +63,7 @@ async def insert_command(recorded_command: RecordedCommand):
         if entity["score"] < 0.5:
             continue
 
-    parsed_command = command.replace(entity["word"], gen_replacement_word(entity))
+    parsed_command = command.replace(entity["word"].strip(), gen_replacement_word(entity))
     
     return {"insert_status": parsed_command}
 
