@@ -1,3 +1,5 @@
+![Sage_ A CLI Copilot](https://github.com/jlaneve/sage/assets/5252587/23be78fa-a6d8-4190-9d35-9b1206d17beb)
+
 # sage
 
 Sage is an AI copilot designed to enhance developer productivity and streamline onboarding processes. By suggesting and autocompleting terminal commands, it significantly reduces the time developers spend on routine tasks.
