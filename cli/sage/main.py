@@ -24,7 +24,7 @@ def generate_option(opt: RankedCommandOutput) -> str:
     """
     return opt.command
 
-@sage.command("")
+@sage.command("ask")
 def main(prompt: Annotated[Optional[str], typer.Argument()]):
     """
     Use Sage to generate a command
