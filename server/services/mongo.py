@@ -58,15 +58,15 @@ def retrieve_doc(prompt: str) -> List[Dict[str, str]]:
     #     }
     # ])
     vector_penalty = 1
-    full_text_penalty = 1
+    full_text_penalty = 4
     result = client['commands']['recorded_commands'].aggregate([
   {
     "$vectorSearch": {
       "index": "default",
       "path": "summary_embeddings",
       "queryVector": vectors,
-      "numCandidates": 30,
-      "limit": 10
+      "numCandidates": 100,
+      "limit": 50
     }
   }, {
     "$group": {
@@ -109,7 +109,7 @@ def retrieve_doc(prompt: str) -> List[Dict[str, str]]:
             }
           }
         }, {
-          "$limit": 100
+          "$limit": 50
         }, {
           "$group": {
             "_id": None,
@@ -186,7 +186,7 @@ def retrieve_doc(prompt: str) -> List[Dict[str, str]]:
     }
   },
   {"$sort": {"score": -1}},
-  {"$limit": 10}
+  {"$limit": 50}
 ])
     
     result = list(result)
@@ -199,13 +199,13 @@ def retrieve_doc(prompt: str) -> List[Dict[str, str]]:
       summary_to_doc[doc["command_summary"]] = doc
       summaries.append(doc["command_summary"])
 
-    reranked_docs = co.rerank(model="rerank-english-v2.0", query=query, documents=summaries, top_n=3, return_documents=True)
+    reranked_docs = co.rerank(model="rerank-english-v2.0", query=query, documents=summaries, top_n=5, return_documents=True)
     
     # print(reranked_docs)
     final_result = []
     for reranked_doc in reranked_docs.results:
       text = reranked_doc.document.text
-      if reranked_doc.relevance_score > 0.6:
+      if reranked_doc.relevance_score > 0.3:
         obj = summary_to_doc[text]
         obj.update({"score": reranked_doc.relevance_score})
         final_result.append(obj)
