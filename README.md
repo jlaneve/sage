@@ -10,7 +10,8 @@ Sage stores historical commands used by team members, allowing it to provide rel
 
 ## demo
 
-![demo video](https://github.com/jlaneve/sage/assets/5252587/0169f467-9be6-48d8-8e0a-71ff6b68d086)
+#### click on thumnail to watch the demo video
+[![video](https://i.imgur.com/wiPWFZK.png)](https://github.com/jlaneve/sage/assets/5252587/0169f467-9be6-48d8-8e0a-71ff6b68d086)
 
 ## ingestion
 
