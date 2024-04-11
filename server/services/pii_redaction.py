@@ -18,21 +18,16 @@ def gen_replacement_word(entity: Dict[str, str]) -> str:
     """
     Generate a replacement word for a given entity
     """
-    replacement_word = "<REPLACE_WITH_YOUR_OWN_VALUE>"
-    if entity["entity_group"] == "EMAIL":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_EMAIL_OR_USERNAME@HOST>"
-    elif entity["entity_group"] == "IP_ADDRESS":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_IP>"
-    elif entity["entity_group"] == "DOMAIN_NAME":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_DOMAIN>"
-    elif entity["entity_group"] == "USERNAME":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_USERNAME>"
-    elif entity["entity_group"] == "PASSWORD":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_PASSWORD>"
-    elif entity["entity_group"] == "KEY":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_KEY>"
-    elif entity["entity_group"] == "NAME":
-        replacement_word = "<REPLACE_WITH_YOUR_OWN_NAME>"
+    replacement_word = {
+        "EMAIL": "<REPLACE_WITH_YOUR_OWN_EMAIL_OR_USERNAME@HOST>",
+        "IP_ADDRESS": "<REPLACE_WITH_YOUR_OWN_IP>",
+        "DOMAIN_NAME": "<REPLACE_WITH_YOUR_OWN_DOMAIN>",
+        "USERNAME": "<REPLACE_WITH_YOUR_OWN_USERNAME>",
+        "PASSWORD": "<REPLACE_WITH_YOUR_OWN_PASSWORD>",
+        "KEY": "<REPLACE_WITH_YOUR_OWN_KEY>",
+        "NAME": "<REPLACE_WITH_YOUR_OWN_NAME>",
+    }.get(entity.get("entity_group"), "Invalid entity group")
+    
     return replacement_word
 
 def redact_command(cmd: str) -> str:
